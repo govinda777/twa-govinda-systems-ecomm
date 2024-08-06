@@ -30,7 +30,10 @@ jobs:
     - name: Lint code
       run: yarn lint
 
-    - name: Scan for malware
-      uses: daboo/clamav-action@v1
+    - name: Scan for vulnerabilities
+      uses: aquasecurity/trivy-action@v0.1.0
       with:
-        path: .
+        scan-type: 'fs'
+        format: 'table'
+        exit-code: '0'
+        ignore-unfixed: true
