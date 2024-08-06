@@ -31,6 +31,6 @@ jobs:
       run: yarn lint
 
     - name: Scan for malware
-      uses: guardrailsio/guardrails-cli-action@v1
+      uses: anthonyhutchins/clamav-action@v1
       with:
-        config-file: ".guardrails.yml"
+        path: .
