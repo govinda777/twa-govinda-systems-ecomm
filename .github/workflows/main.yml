@@ -31,6 +31,6 @@ jobs:
       run: yarn lint
 
     - name: Scan for malware
-      uses: anthonyhutchins/clamav-action@v1
+      uses: daboo/clamav-action@v1
       with:
         path: .
