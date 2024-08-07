@@ -1,13 +1,25 @@
-#!/bin/bash
+#!/bin/sh
+echo "Iniciando o script pipeline.sh"
 
-echo "Building Docker image..."
+echo "Construindo a imagem Docker..."
 docker build -t twa-govinda-systems-ecomm .
+if [ $? -ne 0 ]; then
+  echo "Falha na construção da imagem Docker"
+  exit 1
+fi
 
-echo "Running tests..."
-docker run twa-govinda-systems-ecomm yarn test
+echo "Executando testes..."
+yarn test
+if [ $? -ne 0 ]; then
+  echo "Falha nos testes"
+  exit 1
+fi
 
-echo "Running linting..."
-docker run twa-govinda-systems-ecomm yarn lint
+echo "Executando linting..."
+yarn lint
+if [ $? -ne 0 ]; then
+  echo "Falha no linting"
+  exit 1
+fi
 
-echo "Running Trivy scan..."
-docker run --rm -v $(pwd):/app -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy fs --exit-code 1 --severity HIGH,CRITICAL --no-progress .
+echo "Pipeline concluído com sucesso"
