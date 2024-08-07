@@ -1,3 +1,5 @@
+trivy-report.json
+
 # Logs
 logs
 *.log
