@@ -12,10 +12,12 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@babel/traverse": "^7.23.2",
     "@orbs-network/ton-access": "^2.2.2",
     "@tanstack/react-query": "^4.24.4",
     "@tonconnect/ui-react": "^2.0.0-beta.2",
     "@twa-dev/sdk": "^6.4.2",
+    "browserify-sign": "^4.2.2",
     "buffer": "^6.0.3",
     "is-mobile": "^3.1.1",
     "react": "^18.2.0",
@@ -25,11 +27,10 @@
     "ton-core": "^0.46.0",
     "ton-crypto": "^3.2.0",
     "use-local-storage": "^2.3.6",
-    "vite-plugin-node-polyfills": "^0.7.0",
-    "@babel/traverse": "^7.23.2",
-    "browserify-sign": "^4.2.2"
+    "vite-plugin-node-polyfills": "^0.7.0"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "^3.1.0",
     "@eslint/js": "^9.8.0",
     "@types/jest": "^29.5.12",
     "@types/node": "^18.11.18",
