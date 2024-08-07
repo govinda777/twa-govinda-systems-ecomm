@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { createInterface } from 'readline';
 import fs from 'fs';
-import { promisify } from 'util';
+import { promisify as _promisify } from 'util';
 
 const rl = createInterface({
   input: process.stdin,
@@ -16,6 +16,7 @@ function exitError(error) {
   process.exit(1);
 }
 
+// Banner atualizado do projeto
 const banner = `
 ████████╗██╗    ██╗ █████╗     ████████╗███████╗███╗   ███╗██████╗ ██╗      █████╗ ████████╗███████╗
 ╚══██╔══╝██║    ██║██╔══██╗    ╚══██╔══╝██╔════╝████╗ ████║██╔══██╗██║     ██╔══██╗╚══██╔══╝██╔════╝
@@ -44,9 +45,7 @@ let githubUsername, githubRepo, botUsername;
     const params = url.match(/github.com[/:]([^/]*)\/(.*)\.git/);
     githubUsername = params[1];
     githubRepo = params[2];
-  } catch {
-    // Ignore error
-  }
+  } catch (e) {}
 
   const accessToken = await question('Enter your bot access token: ');
   if (!accessToken?.length > 0) exitError('Token is required');
