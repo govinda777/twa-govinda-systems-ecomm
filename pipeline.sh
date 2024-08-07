@@ -22,4 +22,14 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
+echo "Executando Trivy scan..."
+docker run --rm -v $(pwd):/app twa-govinda-systems-ecomm trivy fs --exit-code 1 --severity HIGH,CRITICAL --no-progress --format json -o trivy-report.json /app
+if [ $? -ne 0 ]; then
+  echo "Trivy encontrou vulnerabilidades"
+  cat trivy-report.json | jq '.'
+  exit 1
+else
+  echo "Nenhuma vulnerabilidade crítica encontrada"
+fi
+
 echo "Pipeline concluído com sucesso"
