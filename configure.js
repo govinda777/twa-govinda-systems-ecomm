@@ -2,7 +2,7 @@ import axios from 'axios';
 import { createInterface } from 'readline';
 import fs from 'fs';
 // 'promisify' não está sendo usado, remova ou use.
-import { promisify } from 'util';
+import { promisify as _promisify } from 'util';
 
 const rl = createInterface({
   input: process.stdin,
