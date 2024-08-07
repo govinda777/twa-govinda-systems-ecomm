@@ -28,8 +28,7 @@ jobs:
       run: yarn test
 
     - name: Lint code
-      run: |
-        yarn lint || echo "Lint warnings detected, but build will continue."
+      run: yarn lint
 
     - name: Install Trivy
       run: |
@@ -39,5 +38,8 @@ jobs:
         sudo apt-get update
         sudo apt-get install trivy
 
-    - name: Scan for vulnerabilities
-      run: trivy fs --format table --exit-code 0 --ignore-unfixed .
+    - name: Scan for vulnerabilities in filesystem
+      run: trivy fs --exit-code 1 --severity HIGH,CRITICAL --no-progress .
+
+    - name: Scan for vulnerabilities in Docker image
+      run: trivy image --exit-code 1 --severity HIGH,CRITICAL your-docker-image:latest
