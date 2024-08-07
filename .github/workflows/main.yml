@@ -15,6 +15,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+        with:
+          repository: govinda777/twa-govinda-systems-ecomm
 
       - name: Set up Node.js
         uses: actions/setup-node@v2
@@ -30,10 +32,13 @@ jobs:
       - name: Lint code
         run: yarn lint || echo "Lint warnings detected, but build will continue."
 
+      - name: Build project
+        run: yarn build
+
       - name: Install Trivy
         run: |
           sudo apt-get update
-          sudo apt-get install -y wget apt-transport-https gnupg lsb-release
+          sudo apt-get install -y wget apt-transport-https gnupg lsb-release jq
           wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
           echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main | sudo tee /etc/apt/sources.list.d/trivy.list
           sudo apt-get update
