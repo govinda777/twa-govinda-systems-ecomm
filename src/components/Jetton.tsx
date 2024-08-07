@@ -1,7 +1,13 @@
 import { beginCell as _beginCell, toNano as _toNano, Address as _Address, Cell as _Cell, fromNano as _fromNano } from "ton";
 import { useTonConnect } from "../hooks/useTonConnect";
 import { useFaucetJettonContract } from "../hooks/useFaucetJettonContract";
-import { Card, FlexBoxCol, FlexBoxRow, Button, Ellipsis } from "./styled/styled";
+import {
+  Card,
+  FlexBoxCol,
+  FlexBoxRow,
+  Button,
+  Ellipsis,
+} from "./styled/styled";
 
 export function Jetton() {
   const { connected } = useTonConnect();
@@ -19,7 +25,12 @@ export function Jetton() {
           Balance
           <div>{balance ?? "Loading..."}</div>
         </FlexBoxRow>
-        <Button disabled={!connected} onClick={async () => mint()}>
+        <Button
+          disabled={!connected}
+          onClick={async () => {
+            mint();
+          }}
+        >
           Get jettons from faucet
         </Button>
       </FlexBoxCol>

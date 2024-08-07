@@ -1,7 +1,8 @@
 import axios from 'axios';
 import { createInterface } from 'readline';
 import fs from 'fs';
-import { promisify as _promisify } from 'util';
+// 'promisify' não está sendo usado, remova ou use.
+import { promisify } from 'util';
 
 const rl = createInterface({
   input: process.stdin,
@@ -11,12 +12,11 @@ const rl = createInterface({
 const question = (question) =>
   new Promise((resolve) => rl.question(question, resolve));
 
-function exitError(error) {
-  console.error(`Error! ${error}`);
+function exitError(_error) {  // prefixe o argumento não utilizado com _
+  console.error(`Error! ${_error}`);
   process.exit(1);
 }
 
-// Banner atualizado do projeto
 const banner = `
 ████████╗██╗    ██╗ █████╗     ████████╗███████╗███╗   ███╗██████╗ ██╗      █████╗ ████████╗███████╗
 ╚══██╔══╝██║    ██║██╔══██╗    ╚══██╔══╝██╔════╝████╗ ████║██╔══██╗██║     ██╔══██╗╚══██╔══╝██╔════╝
@@ -24,13 +24,6 @@ const banner = `
    ██║   ██║███╗██║██╔══██║       ██║   ██╔══╝  ██║╚██╔╝██║██╔═══╝ ██║     ██╔══██║   ██║   ██╔══╝  
    ██║   ╚███╔███╔╝██║  ██║       ██║   ███████╗██║ ╚═╝ ██║██║     ███████╗██║  ██║   ██║   ███████╗
    ╚═╝    ╚══╝╚══╝ ╚═╝  ╚═╝       ╚═╝   ╚══════╝╚═╝     ╚═╝╚═╝     ╚══════╝╚═╝  ╚═╝   ╚═╝   ╚══════╝
-
-████████╗██╗    ██╗██╗ ██████╗ ███████╗███╗   ███╗██████╗     ███████╗ ███████╗ ██████╗ █████╗ ███╗   ███╗███████╗███████╗
-╚══██╔══╝██║    ██║██║██╔════╝ ██╔════╝████╗ ████║██╔══██╗    ██╔════╝ ██╔════╝██╔════╝██╔══██╗████╗ ████║██╔════╝██╔════╝
-   ██║   ██║ █╗ ██║██║██║  ███╗█████╗  ██╔████╔██║██████╔╝    █████╗   ███████╗██║     ███████║██╔████╔██║███████╗█████╗  
-   ██║   ██║███╗██║██║██║   ██║██╔══╝  ██║╚██╔╝██║██╔═══╝     ██╔══╝   ╚════██║██║     ██╔══██║██║╚██╔╝██║╚════██║██╔══╝  
-   ██║   ╚███╔███╔╝██║╚██████╔╝███████╗██║ ╚═╝ ██║██║         ███████╗ ███████║╚██████╗██║  ██║██║ ╚═╝ ██║███████║███████╗
-   ╚═╝    ╚══╝╚══╝ ╚═╝ ╚═════╝ ╚══════╝╚═╝     ╚═╝╚═╝         ╚══════╝ ╚══════╝ ╚═════╝╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝╚══════╝
 `;
 
 console.log(banner);
@@ -45,7 +38,7 @@ let githubUsername, githubRepo, botUsername;
     const params = url.match(/github.com[/:]([^/]*)\/(.*)\.git/);
     githubUsername = params[1];
     githubRepo = params[2];
-  } catch (e) {}
+  } catch (_e) {}  // prefixe o argumento não utilizado com _
 
   const accessToken = await question('Enter your bot access token: ');
   if (!accessToken?.length > 0) exitError('Token is required');
