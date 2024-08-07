@@ -38,7 +38,9 @@ let githubUsername, githubRepo, botUsername;
     const params = url.match(/github.com[/:]([^/]*)\/(.*)\.git/);
     githubUsername = params[1];
     githubRepo = params[2];
-  } catch (_e) {}  // prefixe o argumento não utilizado com _
+  } catch (error) {
+    console.error(`Error! ${error}`);
+  }  // prefixe o argumento não utilizado com _
 
   const accessToken = await question('Enter your bot access token: ');
   if (!accessToken?.length > 0) exitError('Token is required');

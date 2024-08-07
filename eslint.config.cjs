@@ -1,9 +1,7 @@
-const globals = require('globals');
-const { FlatCompat } = require('@eslint/eslintrc');
-
+import globals from 'globals';
+import { FlatCompat } from '@eslint/eslintrc';
 const compat = new FlatCompat();
-
-module.exports = [
+export default [
   {
     ignores: ['node_modules/**'],
   },
