@@ -4,10 +4,9 @@ import {
   Sender,
   Address,
   Cell,
-  contractAddress,
   beginCell,
   toNano,
-} from "ton-core";
+} from 'ton-core';
 
 export default class FaucetJetton implements Contract {
   async sendMintFromFaucet(
@@ -22,7 +21,7 @@ export default class FaucetJetton implements Contract {
       .storeUint(MINT, 32)
       .storeUint(0, 64) // queryid
       .storeAddress(receivingAddress)
-      .storeCoins(toNano("0.02"))
+      .storeCoins(toNano('0.02'))
       .storeRef(
         // internal transfer message
         beginCell()
@@ -31,21 +30,21 @@ export default class FaucetJetton implements Contract {
           .storeCoins(toNano(150))
           .storeAddress(null)
           .storeAddress(receivingAddress) // So we get a notification
-          .storeCoins(toNano("0.001"))
+          .storeCoins(toNano('0.001'))
           .storeBit(false) // forward_payload in this slice, not separate cell
           .endCell()
       )
       .endCell();
 
     await provider.internal(via, {
-      value: toNano("0.05"),
+      value: toNano('0.05'),
       body: mintTokensBody,
     });
   }
 
   async getWalletAddress(provider: ContractProvider, forAddress: Address) {
-    const { stack } = await provider.get("get_wallet_address", [
-      { type: "slice", cell: beginCell().storeAddress(forAddress).endCell() },
+    const { stack } = await provider.get('get_wallet_address', [
+      { type: 'slice', cell: beginCell().storeAddress(forAddress).endCell() },
     ]);
 
     return stack.readAddress().toString();
