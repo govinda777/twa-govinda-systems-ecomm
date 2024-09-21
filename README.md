@@ -46,6 +46,12 @@ Este projeto é altamente opinativo, servindo como um ponto de partida para o de
    npm install
    ```
 
+2.1 Para executar a pipeline na sua máquina local execute o comando abaixo:
+
+    ```bash
+    chmod +x pipeline.sh
+    ```
+
 3. **Crie um novo bot com o [BotFather](https://t.me/botfather)**
 
    - Digite `/newbot`
