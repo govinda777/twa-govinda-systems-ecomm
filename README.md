@@ -51,6 +51,7 @@ Este projeto é altamente opinativo, servindo como um ponto de partida para o de
     ```bash
     chmod +x pipeline.sh
     ```
+    
 
 3. **Crie um novo bot com o [BotFather](https://t.me/botfather)**
 
