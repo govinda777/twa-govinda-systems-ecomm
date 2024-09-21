@@ -1,3 +1,4 @@
+import React from 'react'; // Adicione esta linha
 import "./App.css";
 import { TonConnectButton } from "@tonconnect/ui-react";
 import { Counter } from "./components/Counter";

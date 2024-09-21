@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Address, toNano } from 'ton';
+import { Address, toNano } from 'ton-core';
 import { useTonConnect } from '../hooks/useTonConnect';
 import { Card, FlexBoxCol, FlexBoxRow, Button, Input } from './styled/styled';
 
