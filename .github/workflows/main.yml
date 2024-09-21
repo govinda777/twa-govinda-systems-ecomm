@@ -37,7 +37,11 @@ jobs:
         run: yarn build
 
       - name: Log in to GHCR
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+        env:
+          DOCKER_USER: ${{ github.actor }}
+          DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "$DOCKER_PASSWORD" | docker login ghcr.io -u "$DOCKER_USER" --password-stdin
 
       - name: Cache Trivy DB
         uses: actions/cache@v3
