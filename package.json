@@ -4,14 +4,25 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "precommit": "./pipeline.sh",
+    "precommit": "lint-staged",
     "prepare": "husky install",
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
     "configbot": "node configure.js",
     "test": "jest",
-    "lint": "eslint ."
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn precommit"
+    }
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "git add"
+    ]
   },
   "dependencies": {
     "@babel/core": "^7.0.0",
