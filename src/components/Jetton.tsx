@@ -1,5 +1,5 @@
 import React from 'react'; // Adicione esta linha
-import { beginCell as _beginCell, toNano as _toNano, Address as _Address, Cell as _Cell, fromNano as _fromNano } from "ton";
+import { toNano as _toNano, Address as _Address, Cell as _Cell, fromNano as _fromNano } from "ton";
 import { useTonConnect } from "../hooks/useTonConnect";
 import { useFaucetJettonContract } from "../hooks/useFaucetJettonContract";
 import {

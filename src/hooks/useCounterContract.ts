@@ -19,6 +19,7 @@ export function useCounterContract() {
           : "EQBYLTm4nsvoqJRvs_L-IGNKwWs5RKe19HBK_lFadf19FUfb"
       ) // replace with your address from tutorial 2 step 8
     );
+    // @ts-ignore
     return client.open(contract) as OpenedContract<Counter>;
   }, [client]);
 
