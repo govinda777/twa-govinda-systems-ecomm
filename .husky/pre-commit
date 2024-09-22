@@ -1,3 +1,0 @@
-#!/bin/sh
-echo "Executando pre-commit hook..."
-yarn run precommit
