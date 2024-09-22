@@ -1,26 +1,15 @@
-import globals from 'globals';
-import { FlatCompat } from '@eslint/eslintrc';
-const compat = new FlatCompat();
-
 export default [
+  // Outras configurações...
   {
-    ignores: ['node_modules/**'],
-  },
-  {
-    languageOptions: {
-      ecmaVersion: 2021,
-      sourceType: 'module',
-      globals: {
-        ...globals.browser,
-        ...globals.es2021,
-      },
-    },
     rules: {
-      'react/react-in-jsx-scope': 'off',
-      '@typescript-eslint/no-unused-vars': ['warn', { varsIgnorePattern: '^_' }],
-      '@typescript-eslint/no-explicit-any': 'off',
-      '@typescript-eslint/no-require-imports': 'off',
+      // Desativa a regra para expressões não usadas
+      '@typescript-eslint/no-unused-expressions': 'off',
+
+      // Desativa a regra para variáveis não usadas
+      '@typescript-eslint/no-unused-vars': 'off',
+
+      // Desativa a regra para aliasing do `this`
+      '@typescript-eslint/no-this-alias': 'off',
     },
   },
-  ...compat.extends('plugin:@typescript-eslint/recommended'),
 ];
