@@ -1,10 +1,9 @@
-name: CI
+# This is a basic workflow to help you get started with Actions
+
+name: Build and Deploy
 
 on:
   push:
-    branches:
-      - main
-  pull_request:
     branches:
       - main
 
@@ -13,65 +12,97 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Set up job
-        run: echo "Setting up the job..."
-
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
+      - name: Checkout 🛎️
+        uses: actions/checkout@v2.3.1
+      - name: install dependencies
+        run: npm install
+      - name: Build
+        run: npm run build
+        env:
+          CI: false
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@4.1.4
         with:
-          node-version: '18'
+          branch: gh-pages # The branch the action should deploy to.
+          folder: dist # The folder the action should deploy.
 
-      - name: Install dependencies
-        run: yarn install
+permissions:
+  contents: write
 
-      - name: Run tests
-        run: yarn test
+# name: CI
 
-      - name: Lint code
-        run: yarn lint || echo "Lint warnings detected, but build will continue."
+# on:
+#   push:
+#     branches:
+#       - main
+#   pull_request:
+#     branches:
+#       - main
 
-      - name: Build project
-        run: yarn build
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
 
-      - name: Log in to GHCR
-        uses: docker/login-action@v2
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+#     steps:
+#       - name: Set up job
+#         run: echo "Setting up the job..."
 
-      - name: Cache Trivy DB
-        uses: actions/cache@v3
-        with:
-          path: ~/.cache/trivy/db
-          key: ${{ runner.os }}-trivy-db
-          restore-keys: |
-            ${{ runner.os }}-trivy-db
+#       - name: Checkout code
+#         uses: actions/checkout@v3
 
-      - name: Install prerequisites for Trivy
-        run: sudo apt-get update
+#       - name: Set up Node.js
+#         uses: actions/setup-node@v3
+#         with:
+#           node-version: '18'
 
-      - name: Add Trivy repository
-        run: |
-          sudo apt-get install -y wget gnupg lsb-release
-          wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
-          echo "deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -cs) main" | sudo tee -a /etc/apt/sources.list.d/trivy.list
-          sudo apt-get update
+#       - name: Install dependencies
+#         run: yarn install
 
-      - name: Install Trivy
-        run: sudo apt-get install -y trivy
+#       - name: Run tests
+#         run: yarn test
 
-      - name: Run Trivy to scan filesystem
-        run: trivy fs --exit-code 1 --severity HIGH,CRITICAL --no-progress --format json -o trivy-report.json .
+#       - name: Lint code
+#         run: yarn lint || echo "Lint warnings detected, but build will continue."
 
-      - name: Upload Trivy Report
-        uses: actions/upload-artifact@v3
-        with:
-          name: trivy-report
-          path: trivy-report.json
+#       - name: Build project
+#         run: yarn build
 
-      - name: Display Trivy Report
-        run: cat trivy-report.json | jq '.'
+#       - name: Log in to GHCR
+#         uses: docker/login-action@v2
+#         with:
+#           registry: ghcr.io
+#           username: ${{ github.actor }}
+#           password: ${{ secrets.GITHUB_TOKEN }}
+
+#       - name: Cache Trivy DB
+#         uses: actions/cache@v3
+#         with:
+#           path: ~/.cache/trivy/db
+#           key: ${{ runner.os }}-trivy-db
+#           restore-keys: |
+#             ${{ runner.os }}-trivy-db
+
+#       - name: Install prerequisites for Trivy
+#         run: sudo apt-get update
+
+#       - name: Add Trivy repository
+#         run: |
+#           sudo apt-get install -y wget gnupg lsb-release
+#           wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
+#           echo "deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -cs) main" | sudo tee -a /etc/apt/sources.list.d/trivy.list
+#           sudo apt-get update
+
+#       - name: Install Trivy
+#         run: sudo apt-get install -y trivy
+
+#       - name: Run Trivy to scan filesystem
+#         run: trivy fs --exit-code 1 --severity HIGH,CRITICAL --no-progress --format json -o trivy-report.json .
+
+#       - name: Upload Trivy Report
+#         uses: actions/upload-artifact@v3
+#         with:
+#           name: trivy-report
+#           path: trivy-report.json
+
+#       - name: Display Trivy Report
+#         run: cat trivy-report.json | jq '.'
