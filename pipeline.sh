@@ -11,36 +11,55 @@ start_time=$(date +%s)
 
 echo "${yellow}🚀 Iniciando o script pipeline.sh${reset}"
 
-# Construindo a imagem Docker com cache otimizado
+# Construindo a imagem Docker com detalhes adicionais
 echo "${yellow}🔨 Construindo a imagem Docker...${reset}"
-docker build --quiet -t twa-govinda-systems-ecomm . || {
+docker build --progress=plain -t twa-govinda-systems-ecomm . || {
   echo "${red}❌ Falha na construção da imagem Docker${reset}"
   exit 1
 }
 
 # Executando testes e linting em paralelo para ganhar tempo
 echo "${yellow}🧪 Executando testes e linting...${reset}"
-{
-  yarn test && echo "${green}✅ Testes passaram${reset}"
-} & {
-  yarn lint && echo "${green}✅ Linting passou${reset}"
-}
 
-# Aguardar os dois processos paralelos terminarem
-wait
-if [ $? -ne 0 ]; then
+# Inicia os processos em segundo plano e captura os PIDs
+(
+  yarn test && echo "${green}✅ Testes passaram${reset}"
+) &
+pid_test=$!
+
+(
+  yarn lint && echo "${green}✅ Linting passou${reset}"
+) &
+pid_lint=$!
+
+# Aguardar os dois processos paralelos terminarem e capturar os status de saída
+wait $pid_test
+status_test=$?
+
+wait $pid_lint
+status_lint=$?
+
+if [ $status_test -ne 0 ] || [ $status_lint -ne 0 ]; then
   echo "${red}❌ Falha nos testes ou no linting${reset}"
   exit 1
 fi
 
 # Somente rodar o Trivy scan se os testes e linting passarem
 echo "${yellow}🔎 Executando Trivy scan...${reset}"
-docker run --rm -v $(pwd):/app twa-govinda-systems-ecomm trivy fs --exit-code 1 --severity HIGH,CRITICAL --no-progress --format json -o trivy-report.json /app || {
+
+# Verifica se a imagem twa-govinda-systems-ecomm existe
+if ! docker images twa-govinda-systems-ecomm:latest | awk 'NR>1 {print $1}' | grep -q '^twa-govinda-systems-ecomm$'; then
+  echo "${red}❌ A imagem twa-govinda-systems-ecomm não foi encontrada. Certifique-se de que a imagem foi construída corretamente.${reset}"
+  exit 1
+fi
+
+# Executa o Trivy scan na imagem
+docker run --rm -v "$(pwd)":/app aquasec/trivy image --exit-code 1 --severity HIGH,CRITICAL --no-progress --format json -o trivy-report.json twa-govinda-systems-ecomm || {
   echo "${red}❌ Trivy encontrou vulnerabilidades${reset}"
 
   # Verifique se o jq está instalado antes de tentar processar o arquivo JSON
   if command -v jq > /dev/null; then
-    cat trivy-report.json | jq '.'
+    jq '.' trivy-report.json
   else
     echo "${red}❌ 'jq' não encontrado. Por favor, instale 'jq' para ver os detalhes das vulnerabilidades.${reset}"
     cat trivy-report.json

@@ -17,20 +17,19 @@ export function useCounterContract() {
         network === CHAIN.MAINNET
           ? "EQBPEDbGdwaLv1DKntg9r6SjFIVplSaSJoJ-TVLe_2rqBOmH"
           : "EQBYLTm4nsvoqJRvs_L-IGNKwWs5RKe19HBK_lFadf19FUfb"
-      ) // replace with your address from tutorial 2 step 8
+      )
     );
-    // @ts-ignore
     return client.open(contract) as OpenedContract<Counter>;
   }, [client]);
 
-  const { data, isFetching } = useQuery(
-    ["counter"],
-    async () => {
+  const { data, isFetching } = useQuery({
+    queryKey: ["counter"],
+    queryFn: async () => {
       if (!counterContract) return null;
       return (await counterContract!.getCounter()).toString();
     },
-    { refetchInterval: 3000 }
-  );
+    refetchInterval: 3000,
+  });
 
   return {
     value: isFetching ? null : data,
