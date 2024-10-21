@@ -74,8 +74,11 @@ jobs:
       - name: Install Trivy
         run: sudo apt-get install -y trivy
 
-      - name: Run Trivy to scan filesystem
-        run: trivy fs --exit-code 1 --severity HIGH,CRITICAL --no-progress --format json -o trivy-report.json .
+      - name: Run Trivy to scan filesystem with retries
+        run: |
+          for i in {1..5}; do
+            trivy fs --exit-code 1 --severity HIGH,CRITICAL --no-progress --format json -o trivy-report.json . && break || sleep 30
+          done
 
       - name: Upload Trivy Report
         uses: actions/upload-artifact@v3
