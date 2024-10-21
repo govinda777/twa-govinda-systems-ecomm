@@ -49,11 +49,9 @@ jobs:
       # Adicionando testes E2E com Cypress
       - name: Start application for Cypress tests
         run: yarn dev &
-      
+
       - name: Wait for application to be ready
-        uses: jakejarvis/wait-on-action@v2
-        with:
-          url: 'http://localhost:5173'
+        run: npx wait-on http://localhost:5173
 
       - name: Run Cypress e2e tests
         run: yarn cypress run
