@@ -27,9 +27,13 @@ jobs:
       - name: Run tests with coverage
         run: yarn jest --coverage
 
+      - name: Display coverage report
+        run: cat coverage/lcov-report/index.html
+
       - name: Enforce coverage threshold
         run: |
-          coverage=$(grep -oP '(?<=All files   \| )\d+(?=\.\d+)' coverage/lcov-report/index.html)
+          coverage=$(awk '/All files/ {print int($3)}' coverage/lcov-report/index.html)
+          echo "Current coverage is $coverage%"
           if [ "$coverage" -lt 80 ]; then
             echo "Test coverage is below 80%! Build failed." && exit 1
           fi
