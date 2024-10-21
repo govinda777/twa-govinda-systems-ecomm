@@ -11,6 +11,19 @@ start_time=$(date +%s)
 
 echo "${yellow}🚀 Iniciando o script pipeline.sh${reset}"
 
+# Executa os testes com cobertura
+yarn jest --coverage || exit 1
+
+# Verifica se a cobertura mínima de 80% foi atingida
+coverage=$(awk '/All files/ {print int($3)}' coverage/lcov-report/index.html)
+
+if [ "$coverage" -lt 80 ]; then
+  echo "${red}❌ Cobertura de testes abaixo de 80%! Commit bloqueado.${reset}"
+  exit 1
+else
+  echo "${green}✅ Cobertura de testes está em $coverage%. Commit permitido.${reset}"
+fi
+
 # Construindo a imagem Docker com detalhes adicionais
 echo "${yellow}🔨 Construindo a imagem Docker...${reset}"
 docker build --progress=plain -t twa-govinda-systems-ecomm . || {
