@@ -1,24 +1,43 @@
-import React from 'react'; // Adicione esta linha
+import React from 'react';
 import { TonConnectButton } from "@tonconnect/ui-react";
 import { useCounterContract } from "../hooks/useCounterContract";
 import { useTonConnect } from "../hooks/useTonConnect";
 
-import {
-  Card,
-  FlexBoxCol,
-  FlexBoxRow,
-  Ellipsis,
-  Button,
-} from "./styled/styled";
+import { Card, FlexBoxCol, FlexBoxRow, Ellipsis, Button } from "./styled/styled";
 
-export function Counter() {
-  const { connected } = useTonConnect();
-  const { value, address, sendIncrement } = useCounterContract();
+interface CounterProps {
+  connected?: boolean;
+  value?: number | null;
+  address?: string;
+  sendIncrement?: () => void;
+}
+
+export function Counter({
+  connected: propConnected,
+  value: propValue,
+  address: propAddress,
+  sendIncrement: propSendIncrement,
+}: CounterProps) {
+  // Usando os hooks somente se as props não forem passadas
+  const { connected: hookConnected } = useTonConnect();
+  const { value: hookValue, address: hookAddress, sendIncrement: hookSendIncrement } = useCounterContract();
+
+  const connected = propConnected ?? hookConnected;
+  const value = propValue ?? hookValue;
+  const address = propAddress ?? hookAddress;
+  const sendIncrement = propSendIncrement ?? hookSendIncrement;
+
+  const handleIncrement = () => {
+    if (connected) {
+      sendIncrement();
+    }
+  };
+
+  const renderValue = () => (value !== null ? value : "Loading...");
 
   return (
     <div className="Container">
       <TonConnectButton />
-
       <Card>
         <FlexBoxCol>
           <h3>Counter : -----</h3>
@@ -28,14 +47,12 @@ export function Counter() {
           </FlexBoxRow>
           <FlexBoxRow>
             <b>Value :</b>
-            <div>{value ?? "Loading..."}</div>
+            <div>{renderValue()}</div>
           </FlexBoxRow>
           <Button
             disabled={!connected}
             className={`Button ${connected ? "Active" : "Disabled"}`}
-            onClick={() => {
-              sendIncrement();
-            }}
+            onClick={handleIncrement}
           >
             Increment
           </Button>
