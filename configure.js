@@ -40,7 +40,7 @@ let githubUsername, githubRepo, botUsername;
     githubRepo = params[2];
   } catch (error) {
     console.error(`Error! ${error}`);
-  }  // prefixe o argumento não utilizado com _
+  }  
 
   const accessToken = await question('Enter your bot access token: ');
   if (!accessToken?.length > 0) exitError('Token is required');

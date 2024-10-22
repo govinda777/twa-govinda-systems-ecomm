@@ -18,7 +18,6 @@ export function Counter({
   address: propAddress,
   sendIncrement: propSendIncrement,
 }: CounterProps) {
-  // Usando os hooks somente se as props não forem passadas
   const { connected: hookConnected } = useTonConnect();
   const { value: hookValue, address: hookAddress, sendIncrement: hookSendIncrement } = useCounterContract();
 
